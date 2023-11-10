@@ -1,4 +1,4 @@
-package com.api.rest.controller.dto;
+package com.api.rest.model.dto;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;

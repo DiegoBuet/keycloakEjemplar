@@ -1,6 +1,6 @@
 package com.api.rest.service.impl;
 
-import com.api.rest.controller.dto.UserDTO;
+import com.api.rest.model.dto.UserDTO;
 import com.api.rest.service.IKeycloakService;
 import com.api.rest.util.KeyCloakProvider;
 import jakarta.ws.rs.core.Response;
@@ -15,40 +15,25 @@ import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 @Service
 @Slf4j
 public class KeycloakServiceImpl implements IKeycloakService {
-
-    /*
-    * Metodo para listar todos los usuarios de Keycloak
-    * return List<UserRepresentation>
-    * */
+//
     @Override
     public List<UserRepresentation> findAllUsers() {
         return KeyCloakProvider.getRealmResource()
                 .users()
                 .list();
     }
-
-    /*
-    * Metodo para buscar un usuario por el username
-    * return Liste<UserRepresentation>
-    * */
     @Override
     public List<UserRepresentation> searchUserByUsername(String username) {
         return KeyCloakProvider.getRealmResource()
                 .users()
                 .searchByUsername(username, true);
     }
-
-    /*
-     * Metodo para crear un nuevo usuario por el username
-     * return Liste<UserRepresentation>
-     * */
     @Override
     public String createUser(@NonNull UserDTO userDTO) {
 
@@ -111,11 +96,6 @@ public class KeycloakServiceImpl implements IKeycloakService {
 
     }
 
-
-    /*
-     * Metodo para Borrar un usuario por el id
-     * return Liste<UserRepresentation>
-     * */
     @Override
     public void deleteUser(String userId) {
         KeyCloakProvider.getUserResource()
@@ -123,10 +103,6 @@ public class KeycloakServiceImpl implements IKeycloakService {
                 .remove();
     }
 
-    /*
-     * Metodo para actualizar un usuario en Keycloak
-     * return Liste<UserRepresentation>
-     * */
     @Override
     public void updateUser(String userId,@NonNull UserDTO userDTO) {
         CredentialRepresentation credentialRepresentation = new CredentialRepresentation();

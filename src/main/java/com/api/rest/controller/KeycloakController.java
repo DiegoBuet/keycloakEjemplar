@@ -1,6 +1,6 @@
 package com.api.rest.controller;
 
-import com.api.rest.controller.dto.UserDTO;
+import com.api.rest.model.dto.UserDTO;
 import com.api.rest.service.IKeycloakService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

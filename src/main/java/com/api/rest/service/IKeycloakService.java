@@ -1,6 +1,6 @@
 package com.api.rest.service;
 
-import com.api.rest.controller.dto.UserDTO;
+import com.api.rest.model.dto.UserDTO;
 import lombok.NonNull;
 import org.keycloak.representations.idm.UserRepresentation;
 
