@@ -20,9 +20,9 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class KeycloakServiceImpl implements IKeycloakService {
-//
-    @Override
+public class KeycloakServiceImpl  {
+//implements IKeycloakService
+   /* @Override
     public List<UserRepresentation> findAllUsers() {
         return KeyCloakProvider.getRealmResource()
                 .users()
@@ -122,5 +122,5 @@ public class KeycloakServiceImpl implements IKeycloakService {
         UserResource userResource = KeyCloakProvider.getUserResource().get(userId);
 
         userResource.update(userRepresentation);
-    }
+    }*/
 }

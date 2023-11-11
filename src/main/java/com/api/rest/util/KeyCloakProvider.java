@@ -8,7 +8,7 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
 
 public class KeyCloakProvider {
-    private static final String SERVER_URL = "http://localhost:9090";
+  /*  private static final String SERVER_URL = "http://localhost:9090";
     private static final String REALM_NAME = "spring-boot-realm-dev";
     private static final String REALM_MASTER = "master";
     private static final String ADMIN_CLI = "admin-cli";
@@ -36,5 +36,5 @@ public class KeyCloakProvider {
     public static UsersResource getUserResource(){
         RealmResource realmResource = getRealmResource();
         return realmResource.users();
-    }
+    }*/
 }

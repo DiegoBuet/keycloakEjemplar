@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/purchases")
 public class PurchaseController {
@@ -58,11 +60,25 @@ public class PurchaseController {
         return new ResponseEntity<>(updatedPurchase, HttpStatus.OK);
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<DetailedPurchaseDTO> getPurchase(@PathVariable Long id) {
         DetailedPurchaseDTO detailedPurchase = purchaseService.getPurchase(id);
         return new ResponseEntity<>(detailedPurchase, HttpStatus.OK);
     }
+
+    @GetMapping("/current/{clientId}")
+    public ResponseEntity<List<ProductDTO>> getCurrentPurchase(@PathVariable Long clientId) {
+        List<ProductDTO> currentPurchase = purchaseService.getCurrentPurchase(clientId);
+        return new ResponseEntity<>(currentPurchase, HttpStatus.OK);
+    }
+
+/*    @GetMapping("/current/{clientId}")
+    public String getCurrentPurchase(@PathVariable Long clientId) {
+        //List<ProductDTO> currentPurchase = purchaseService.getCurrentPurchase(clientId);
+        return "turi ruriru turitu";
+    }*/
+
 
 
 }

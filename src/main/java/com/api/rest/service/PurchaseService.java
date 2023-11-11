@@ -6,14 +6,17 @@ import com.api.rest.model.dto.PurchaseDTO;
 import com.api.rest.model.entities.*;
 import com.api.rest.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
@@ -33,20 +36,45 @@ public class PurchaseService {
         this.paymentMethodRepository = paymentMethodRepository;
     }
 
-    public DetailedPurchaseDTO startPurchase(PurchaseDTO purchaseDTO) {
-        Client client = getClientById(purchaseDTO.getClientId());
-        Address address = getAddressById(purchaseDTO.getAddressId());
-        PaymentMethod paymentMethod = getPaymentMethodById(purchaseDTO.getPaymentMethodId());
+     public DetailedPurchaseDTO startPurchase(PurchaseDTO purchaseDTO) {
+        try {
+            Client client = getClientById(purchaseDTO.getClientId());
+            Address address = getAddressById(purchaseDTO.getAddressId());
+            PaymentMethod paymentMethod = getPaymentMethodById(purchaseDTO.getPaymentMethodId());
 
-        Purchase newPurchase = new Purchase();
-        newPurchase.setClient(client);
-        newPurchase.setDeliveryAddress(address);
-        newPurchase.setPaymentMethod(paymentMethod);
+            Purchase newPurchase = new Purchase();
+            // Log para verificar si los datos precargados están funcionando
+            log.info("Clientes precargados: {}", clientRepository.findAll());
+            log.info("Direcciones precargadas: {}", addressRepository.findAll());
+            log.info("Métodos de pago precargados: {}", paymentMethodRepository.findAll());
+            log.info("Productos precargados: {}", productRepository.findAll());
+            newPurchase.setClient(client);
+            newPurchase.setDeliveryAddress(address);
+            newPurchase.setPaymentMethod(paymentMethod);
 
-        Purchase savedPurchase = purchaseRepository.save(newPurchase);
+            // Mapeo de ProductDTO a PurchaseItem
+            List<PurchaseItem> purchaseItems = purchaseDTO.getProducts().stream()
+                    .map(productDTO -> {
+                        Product product = getProductById(productDTO.getProductId());
+                        PurchaseItem purchaseItem = new PurchaseItem();
+                        purchaseItem.setProduct(product);
+                        purchaseItem.setQuantity(productDTO.getQuantity());
+                        purchaseItem.setPurchase(newPurchase);
+                        return purchaseItem;
+                    })
+                    .collect(Collectors.toList());
 
-        return mapToDetailedPurchaseDTO(savedPurchase);
+            newPurchase.setPurchaseItems(purchaseItems);
+
+            Purchase savedPurchase = purchaseRepository.save(newPurchase);
+
+            return mapToDetailedPurchaseDTO(savedPurchase);
+        } catch (Exception e) {
+            log.error("Error while starting purchase: {}", e.getMessage());
+            throw new RuntimeException("Error starting purchase", e);
+        }
     }
+
 
     public DetailedPurchaseDTO addProduct(Long idPurchase, ProductDTO productDTO) {
         Purchase purchase = getPurchaseById(idPurchase);
@@ -86,8 +114,19 @@ public class PurchaseService {
     }
 
     public void removeProduct(Long idPurchase, Long idProduct) {
-        // Implement logic to remove a product from the purchase
+        Purchase purchase = getPurchaseById(idPurchase);
+        Product product = getProductById(idProduct);
+
+        // Encuentra y elimina el PurchaseItem correspondiente al producto
+        purchase.getPurchaseItems().removeIf(purchaseItem -> purchaseItem.getProduct().equals(product));
+
+        // Actualiza el monto total de la compra
+        updatePurchaseTotalAmount(purchase);
+
+        // Guarda la compra actualizada
+        purchaseRepository.save(purchase);
     }
+
 
     public DetailedPurchaseDTO changeAddress(Long idPurchase, Long idAddress) {
         Purchase purchase = getPurchaseById(idPurchase);
@@ -111,10 +150,6 @@ public class PurchaseService {
         return mapToDetailedPurchaseDTO(savedPurchase);
     }
 
-    public DetailedPurchaseDTO getPurchase(Long idPurchase) {
-        Purchase purchase = getPurchaseById(idPurchase);
-        return mapToDetailedPurchaseDTO(purchase);
-    }
 
     private Product getProductById(Long idProduct) {
         return productRepository.findById(idProduct)
@@ -124,11 +159,6 @@ public class PurchaseService {
     private Purchase getPurchaseById(Long idPurchase) {
         return purchaseRepository.findById(idPurchase)
                 .orElseThrow(() -> new EntityNotFoundException("Compra no encontrada"));
-    }
-
-    private Client getClientById(Long clientId) {
-        return clientRepository.findById(clientId)
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
     }
 
     private Address getAddressById(Long addressId) {
@@ -164,7 +194,7 @@ public class PurchaseService {
                 .build();
     }
 
-    private void updatePurchaseTotalAmount(Purchase purchase) {
+/*    private void updatePurchaseTotalAmount(Purchase purchase) {
         List<PurchaseItem> purchaseItems = purchase.getPurchaseItems();
         BigDecimal totalAmount = BigDecimal.ZERO;
 
@@ -179,7 +209,80 @@ public class PurchaseService {
         }
 
         purchase.setTotalAmount(totalAmount);
+    }*/
+
+    public List<ProductDTO> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(this::mapToProductDTO)
+                .collect(Collectors.toList());
     }
+
+    private ProductDTO mapToProductDTO(Product product) {
+        return ProductDTO.builder()
+                .productId(product.getId())
+                .quantity(0)  // Puedes ajustar según sea necesario
+                .build();
+    }
+
+    private DetailedPurchaseDTO mapToDetailedPurchaseDTO(Purchase purchase, List<ProductDTO> productDTOs) {
+        return DetailedPurchaseDTO.builder()
+                .id(purchase.getId())
+                .clientId(purchase.getClient().getId())
+                .products(productDTOs)
+                .addressId(purchase.getDeliveryAddress().getId())
+                .paymentMethodId(purchase.getPaymentMethod().getId())
+                .status(purchase.getStatus())
+                .build();
+    }
+
+    public DetailedPurchaseDTO getPurchase(Long idPurchase) {
+        Purchase purchase = getPurchaseById(idPurchase);
+        List<ProductDTO> productDTOs = getAllProducts();  // Obtén la lista de productos
+        return mapToDetailedPurchaseDTO(purchase, productDTOs);
+    }
+    private Client getClientById(Long clientId) {
+        Optional<Client> optionalClient = clientRepository.findById(clientId);
+        if (optionalClient.isPresent()) {
+            return optionalClient.get();
+        } else {
+            log.error("Cliente no encontrado con ID: {}", clientId);
+            throw new EntityNotFoundException("Cliente no encontrado");
+        }
+    }
+
+    public List<ProductDTO> getCurrentPurchase(Long clientId) {
+        try {
+            Client client = getClientById(clientId);
+            Optional<Purchase> currentPurchase = purchaseRepository.findFirstByClientAndStatus(client, PurchaseStatus.IN_PROGRESS);
+
+            if (currentPurchase.isPresent()) {
+                return currentPurchase.get().getPurchaseItems().stream()
+                        .map(this::mapToProductDTO)
+                        .collect(Collectors.toList());
+            } else {
+                throw new EntityNotFoundException("Compra actual no encontrada para el cliente");
+            }
+        } catch (EntityNotFoundException e) {
+            // Manejar la excepción aquí o relanzarla según sea necesario
+            throw new RuntimeException("Error al obtener la compra actual", e);
+        }
+    }
+
+
+    private void updatePurchaseTotalAmount(Purchase purchase) {
+        List<PurchaseItem> purchaseItems = purchase.getPurchaseItems();
+
+        // Utilizar Java Streams y reducción para calcular el totalAmount
+        BigDecimal totalAmount = purchaseItems.stream()
+                .map(item -> BigDecimal.valueOf(item.getProduct().getPrice())
+                        .multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        purchase.setTotalAmount(totalAmount);
+    }
+
+
 
 }
 

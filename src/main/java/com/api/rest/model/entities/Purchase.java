@@ -21,11 +21,10 @@
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        // Agrega el getter para 'client'
         @Getter
         @ManyToOne
-        @JoinColumn(name = "client_id", nullable = false)  // Cambia a "client_id"
-        private Client client;  // Cambia a "Client"
+        @JoinColumn(name = "client_id", nullable = false)
+        private Client client;
 
         @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
         private List<PurchaseItem> purchaseItems;
@@ -44,20 +43,14 @@
         @Column(name = "purchase_date")
         private LocalDateTime purchaseDate;
 
-        // Agrega el getter para 'status'
-
-        @Getter
-        @ManyToOne
-        @JoinColumn(name = "status_id") // Ajusta el nombre de la columna según tu modelo
+        @Column(name = "status")
+        @Enumerated(EnumType.STRING)
         private PurchaseStatus status;
 
-
-        // Agrega el setter para 'client'
         public void setClient(Client client) {
             this.client = client;
         }
 
-        // Agrega el setter para 'status'
         public void setStatus(PurchaseStatus status) {
             this.status = status;
         }

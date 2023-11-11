@@ -11,10 +11,6 @@ public interface IKeycloakService {
     List<UserRepresentation> findAllUsers();
     List<UserRepresentation> searchUserByUsername(String username);
 
-    /*
-     * Metodo para crear un nuevo usuario por el username
-     * return Liste<UserRepresentation>
-     * */
     String createUser(@NonNull UserDTO userDTO);
 
     void deleteUser(String userId);
