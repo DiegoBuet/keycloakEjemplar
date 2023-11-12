@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "products")
 @Data
@@ -20,6 +22,9 @@ public class Product {
     private String name;
 
     @Column(nullable = false)
-    private double price;
+    private BigDecimal price;
+
+    @Column(nullable = false)
+    private int quantity;  // Agrega la cantidad
 
 }

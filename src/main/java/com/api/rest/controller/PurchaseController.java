@@ -3,6 +3,7 @@ package com.api.rest.controller;
 import com.api.rest.model.dto.DetailedPurchaseDTO;
 import com.api.rest.model.dto.ProductDTO;
 import com.api.rest.model.dto.PurchaseDTO;
+import com.api.rest.model.dto.PurchaseResponseDTO;
 import com.api.rest.service.PurchaseService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,17 +45,19 @@ public class PurchaseController {
         return new ResponseEntity<>(detailedPurchase, HttpStatus.OK);
     }
 
+/*
     @GetMapping("/current/{clientId}")
     public ResponseEntity<List<ProductDTO>> getCurrentPurchase(@PathVariable Long clientId) {
         List<ProductDTO> currentPurchase = purchaseService.getCurrentPurchase(clientId);
         return new ResponseEntity<>(currentPurchase, HttpStatus.OK);
     }
+*/
 
-/*    @GetMapping("/current/{clientId}")
-    public String getCurrentPurchase(@PathVariable Long clientId) {
-        //List<ProductDTO> currentPurchase = purchaseService.getCurrentPurchase(clientId);
-        return "turi ruriru turitu";
-    }*/
+    @GetMapping("/current/{clientId}")
+    public ResponseEntity<PurchaseResponseDTO> getCurrentPurchase(@PathVariable Long clientId) {
+        PurchaseResponseDTO currentPurchase = purchaseService.getCurrentPurchase(clientId);
+        return new ResponseEntity<>(currentPurchase, HttpStatus.OK);
+    }
 
     @PutMapping("/{id}/change-address")
     public ResponseEntity<DetailedPurchaseDTO> changeAddress(@PathVariable Long id, @RequestParam Long addressId) {
@@ -80,7 +83,7 @@ public class PurchaseController {
         }
     }
 
-    @PostMapping("/{id}/add-product")
+/*    @PostMapping("/{id}/add-product")
     public ResponseEntity<DetailedPurchaseDTO> addProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
         try {
             DetailedPurchaseDTO updatedPurchase = purchaseService.addProduct(id, productDTO);
@@ -90,7 +93,7 @@ public class PurchaseController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }*/
 
     @PutMapping("/{id}/modify-product")
     public ResponseEntity<DetailedPurchaseDTO> modifyProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
@@ -116,6 +119,22 @@ public class PurchaseController {
         }
     }
 
+    @PostMapping("/{id}/add-product")
+    public ResponseEntity<DetailedPurchaseDTO> addProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+        try {
+            DetailedPurchaseDTO updatedPurchase = purchaseService.addProduct(id, productDTO);
+            return new ResponseEntity<>(updatedPurchase, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    @GetMapping("/all-products")
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        List<ProductDTO> allProducts = purchaseService.getAllProducts();
+        return new ResponseEntity<>(allProducts, HttpStatus.OK);
+    }
 
 }
