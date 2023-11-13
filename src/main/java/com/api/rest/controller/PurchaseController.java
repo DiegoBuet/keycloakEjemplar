@@ -6,6 +6,7 @@ import com.api.rest.model.dto.PurchaseDTO;
 import com.api.rest.model.dto.PurchaseResponseDTO;
 import com.api.rest.service.PurchaseService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/purchases")
+@Slf4j
 public class PurchaseController {
 
     private final PurchaseService purchaseService;
@@ -45,13 +47,6 @@ public class PurchaseController {
         return new ResponseEntity<>(detailedPurchase, HttpStatus.OK);
     }
 
-/*
-    @GetMapping("/current/{clientId}")
-    public ResponseEntity<List<ProductDTO>> getCurrentPurchase(@PathVariable Long clientId) {
-        List<ProductDTO> currentPurchase = purchaseService.getCurrentPurchase(clientId);
-        return new ResponseEntity<>(currentPurchase, HttpStatus.OK);
-    }
-*/
 
     @GetMapping("/current/{clientId}")
     public ResponseEntity<PurchaseResponseDTO> getCurrentPurchase(@PathVariable Long clientId) {
@@ -83,19 +78,8 @@ public class PurchaseController {
         }
     }
 
-/*    @PostMapping("/{id}/add-product")
-    public ResponseEntity<DetailedPurchaseDTO> addProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
-        try {
-            DetailedPurchaseDTO updatedPurchase = purchaseService.addProduct(id, productDTO);
-            return new ResponseEntity<>(updatedPurchase, HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }*/
 
-    @PutMapping("/{id}/modify-product")
+/*    @PutMapping("/{id}/modify-product")
     public ResponseEntity<DetailedPurchaseDTO> modifyProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
         try {
             DetailedPurchaseDTO updatedPurchase = purchaseService.modifyProduct(id, productDTO);
@@ -105,7 +89,7 @@ public class PurchaseController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }*/
 
     @DeleteMapping("/{id}/remove-product")
     public ResponseEntity<Void> removeProduct(@PathVariable Long id, @RequestParam Long productId) {
@@ -130,6 +114,36 @@ public class PurchaseController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+/*    @PutMapping("/{id}/modify-product")
+    public ResponseEntity<DetailedPurchaseDTO> modifyProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+        try {
+            DetailedPurchaseDTO updatedPurchase = purchaseService.modifyProduct(id, productDTO);
+            return new ResponseEntity<>(updatedPurchase, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            log.error("Entity not found: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            log.error("Internal server error: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }*/
+
+    @PutMapping("/{id}/modify-product")
+    public ResponseEntity<DetailedPurchaseDTO> modifyProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+        try {
+            DetailedPurchaseDTO updatedPurchase = purchaseService.modifyProduct(id, productDTO);
+            return new ResponseEntity<>(updatedPurchase, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            log.error("Entity not found: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            log.error("Internal server error: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
     @GetMapping("/all-products")
     public ResponseEntity<List<ProductDTO>> getAllProducts() {

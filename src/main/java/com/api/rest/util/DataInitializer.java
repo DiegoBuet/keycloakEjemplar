@@ -40,6 +40,7 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         // Precargar direcciones
         log.info("DataInitializer is init running...");
+/*
         List<Address> addresses = Arrays.asList(
                 new Address(1L,"123 Main St", "Cityville", "Stateville", "12345"),
                 new Address(2L,"456 Oak St", "Townburg", "Stateville", "67890")
@@ -77,6 +78,7 @@ public class DataInitializer implements CommandLineRunner {
                 // Agrega más clientes según sea necesario
         );
         clientRepository.saveAll(clients);
+*/
         log.info("DataInitializer is charged...");
     }
 

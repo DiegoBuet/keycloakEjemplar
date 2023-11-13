@@ -18,8 +18,8 @@ public class PaymentMethod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "card_type")
-    private String cardType;
+    @Column(name = "cardtype")
+    private String cardtype;
 
     // Agrega el getter para 'id'
     public Long getId() {
@@ -33,10 +33,10 @@ public class PaymentMethod {
 
     // Agrega el getter y setter para 'cardType'
     public String getCardType() {
-        return cardType;
+        return cardtype;
     }
 
-    public void setCardType(String cardType) {
-        this.cardType = cardType;
+    public void setCardType(String cardtype) {
+        this.cardtype = cardtype;
     }
 }
