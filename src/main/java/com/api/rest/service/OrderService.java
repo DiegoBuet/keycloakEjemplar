@@ -9,9 +9,6 @@ import com.api.rest.model.dto.PaymentDTO;
 
 
 public interface OrderService {
-    DetailedPurchaseDTO createOrder(OrderRequestDTO orderRequestDTO);
-
-
 
 }
 

@@ -22,19 +22,18 @@
         private Long id;
 
         @Getter
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.EAGER)  // Asegúrate de que FetchType sea EAGER
         @JoinColumn(name = "client_id", nullable = false)
         private Client client;
 
-        @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
+        @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
         private List<PurchaseItem> purchaseItems;
 
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "delivery_address_id")
         private Address deliveryAddress;
 
-
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "payment_method_id")
         private PaymentMethod paymentMethod;
 

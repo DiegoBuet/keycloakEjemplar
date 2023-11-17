@@ -8,7 +8,12 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import com.api.rest.repositories.PurchaseRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -127,7 +132,7 @@ public class PurchaseServiceImpl {
                 .build();
     }
 
-    private ProductDTO mapToProductDTO(PurchaseItem purchaseItem, BigDecimal totalAmount) {
+    public ProductDTO mapToProductDTO(PurchaseItem purchaseItem, BigDecimal totalAmount) {
         Product product = purchaseItem.getProduct();
         return ProductDTO.builder()
                 .productId(product.getId())
@@ -506,4 +511,53 @@ public class PurchaseServiceImpl {
             throw new RuntimeException("Error starting purchase", e);
         }
     }
+
+    public AddressDTO mapToAddressDTO(Address address) {
+        return AddressDTO.builder()
+                .street(address.getStreet())
+                .city(address.getCity())
+                .state(address.getState())
+                .zipCode(address.getZipCode())
+                .build();
+    }
+
+/*    public FullOrderDTO mapToFullOrderDTO(Purchase purchase) {
+        // Mapea los productos
+        List<ProductDTO> productDTOs = purchase.getPurchaseItems().stream()
+                .map(item -> purchaseService.mapToProductDTO(item, purchase.getTotalAmount()))
+                .collect(Collectors.toList());
+
+        // Mapea la dirección de entrega
+        AddressDTO addressDTO = mapToAddressDTO(purchase.getDeliveryAddress());
+
+        // Mapea el método de pago (Enum)
+        PaymentMethodType paymentMethodType = purchase.getPaymentMethod().getType();
+
+        // Construye el DTO completo
+        return FullOrderDTO.builder()
+                .purchaseId(purchase.getId())
+                .clientId(purchase.getClient().getId())
+                .products(productDTOs)
+                .deliveryAddress(addressDTO)
+                .totalAmount(purchase.getTotalAmount().doubleValue())
+                .orderStatus(purchase.getStatus())
+                .paymentMethodType(paymentMethodType)  // Utiliza el enum directamente
+                .build();
+    }*/
+
+/*    public DetailedPurchaseDTO startPurchase(PurchaseDTO purchaseDTO) {
+        try {
+            Client client = getClientById(purchaseDTO.getClientId());
+            Address existingAddress = addressService.mapToAddress(purchaseDTO.getAddressDTO()); // Utiliza el nuevo método
+
+            // ... (resto del código)
+        } catch (EntityNotFoundException e) {
+            log.error("Error while starting purchase: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Error while starting purchase: {}", e.getMessage());
+            throw new RuntimeException("Error starting purchase", e);
+        }
+    }*/
+
 }

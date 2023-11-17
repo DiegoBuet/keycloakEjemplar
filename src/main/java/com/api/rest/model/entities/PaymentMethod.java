@@ -18,7 +18,7 @@ public class PaymentMethod {
     @Getter@Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method_type")
-    private PaymentMethodType paymentMethodType;
+    private PaymentMethodType paymentMethodType;;
 
     // Agrega el getter para 'id'
     public Long getId() {
@@ -28,6 +28,14 @@ public class PaymentMethod {
     // Agrega el setter para 'id'
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public PaymentMethodType getType() {
+        return paymentMethodType;
+    }
+
+    public void setType(PaymentMethodType paymentMethodType) {
+        this.paymentMethodType = paymentMethodType;
     }
 
 }
