@@ -1,6 +1,6 @@
 package com.api.rest.model.dto;
 
-import com.api.rest.model.entities.PurchaseStatus;
+import com.api.rest.model.entities.OrderStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +21,6 @@ public class DetailedPurchaseDTO {
     private Long addressId;
     @NotNull(message = "paymentMethodId is required")
     private Long paymentMethodId;
-    private PurchaseStatus status;
+    private OrderStatus status;
 }
 

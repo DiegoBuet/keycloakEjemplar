@@ -7,6 +7,8 @@ CREATE TABLE purchases (
     purchase_date TIMESTAMP,
     status VARCHAR(255),
     total_amount DECIMAL(10, 2),
+    payment_amount DECIMAL(10, 2),
+    payment_status VARCHAR(255),
     FOREIGN KEY (client_id) REFERENCES clients(id),
     FOREIGN KEY (delivery_address_id) REFERENCES addresses(id),
     FOREIGN KEY (payment_method_id) REFERENCES payment_methods(id)

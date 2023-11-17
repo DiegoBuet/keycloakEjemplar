@@ -33,6 +33,7 @@
         @JoinColumn(name = "delivery_address_id")
         private Address deliveryAddress;
 
+
         @ManyToOne
         @JoinColumn(name = "payment_method_id")
         private PaymentMethod paymentMethod;
@@ -45,13 +46,26 @@
 
         @Column(name = "status")
         @Enumerated(EnumType.STRING)
-        private PurchaseStatus status;
+        private OrderStatus status;
+
+        @Column(name = "payment_amount") // Cambié el nombre aquí para evitar la colisión
+        private BigDecimal paymentAmount;
+
+        @Column(name = "payment_status")
+        @Enumerated(EnumType.STRING)
+        private OrderStatus paymentStatus;
+
 
         public void setClient(Client client) {
             this.client = client;
         }
 
-        public void setStatus(PurchaseStatus status) {
+        public void setStatus(OrderStatus status) {
             this.status = status;
+        }
+
+
+        public void setPaymentAmount(BigDecimal paymentAmount) {
+            this.paymentAmount = paymentAmount;
         }
     }

@@ -1,10 +1,7 @@
 package com.api.rest.model.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "payment_methods")
@@ -18,8 +15,10 @@ public class PaymentMethod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "cardtype")
-    private String cardtype;
+    @Getter@Setter
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method_type")
+    private PaymentMethodType paymentMethodType;
 
     // Agrega el getter para 'id'
     public Long getId() {
@@ -31,12 +30,4 @@ public class PaymentMethod {
         this.id = id;
     }
 
-    // Agrega el getter y setter para 'cardType'
-    public String getCardType() {
-        return cardtype;
-    }
-
-    public void setCardType(String cardtype) {
-        this.cardtype = cardtype;
-    }
 }
