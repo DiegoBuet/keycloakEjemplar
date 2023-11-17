@@ -56,11 +56,11 @@ public class PurchaseServiceImpl {
 
     private PaymentMethod getPaymentMethodById(Long paymentMethodId) {
         if (paymentMethodId == null) {
-            // Si el paymentMethodId es nulo, asignar el PaymentMethod con ID 1 (por ejemplo, Visa)
+
             return paymentMethodRepository.findById(1L)
                     .orElseThrow(() -> new EntityNotFoundException("Método de pago predeterminado no encontrado"));
         } else {
-            // Si el paymentMethodId no es nulo, buscar el PaymentMethod por ID
+
             return paymentMethodRepository.findById(paymentMethodId)
                     .orElseThrow(() -> new EntityNotFoundException("Método de pago no encontrado"));
         }
@@ -68,7 +68,7 @@ public class PurchaseServiceImpl {
     private ProductDTO mapToProductDTO(Product product) {
         return ProductDTO.builder()
                 .productId(product.getId())
-                .quantity(0)  // Puedes ajustar según sea necesario
+                .quantity(0)
                 .build();
     }
 
@@ -85,7 +85,7 @@ public class PurchaseServiceImpl {
 
     public DetailedPurchaseDTO getPurchase(Long idPurchase) {
         Purchase purchase = getPurchaseById(idPurchase);
-        List<ProductDTO> productDTOs = getAllProducts();  // Obtén la lista de productos
+        List<ProductDTO> productDTOs = getAllProducts();
         return mapToDetailedPurchaseDTO(purchase, productDTOs);
     }
     private Client getClientById(Long clientId) {
@@ -103,16 +103,12 @@ public class PurchaseServiceImpl {
         try {
             Purchase purchase = getPurchaseById(idPurchase);
 
-            // Encuentra y elimina el PurchaseItem correspondiente al producto
             purchase.getPurchaseItems().removeIf(purchaseItem -> purchaseItem.getProduct().getId().equals(idProduct));
 
-            // Actualiza el monto total de la compra
             updatePurchaseTotalAmount(purchase);
 
-            // Guarda la compra actualizada
             Purchase savedPurchase = purchaseRepository.save(purchase);
 
-            // Devuelve el estado actualizado de la compra
             return mapToDetailedPurchaseDTO(savedPurchase);
         } catch (EntityNotFoundException e) {
             log.error("Error while removing product: {}", e.getMessage());
@@ -139,7 +135,6 @@ public class PurchaseServiceImpl {
                 .quantity(purchaseItem.getQuantity())
                 .productName(product.getName())
                 .productPrice(product.getPrice())
-                // .totalAmount(totalAmount != null ? totalAmount.doubleValue() : 0.0)  // Verifica si totalAmount es null
                 .build();
     }
     private DetailedPurchaseDTO mapToDetailedPurchaseDTO(Purchase purchase) {
@@ -167,37 +162,31 @@ public class PurchaseServiceImpl {
         try {
             Purchase purchase = getPurchaseById(idPurchase);
 
-            // Intenta obtener el producto por ID
+
             Product product = getProductById(productDTO.getProductId());
 
             if (product == null) {
-                // Si el producto no existe, crea uno nuevo
                 product = new Product();
-                // Configura los detalles del nuevo producto (puedes ajustar según tus necesidades)
                 product.setId(productDTO.getProductId());
                 product.setName("Nuevo Producto");
-                product.setPrice(BigDecimal.valueOf(0.0)); // Puedes establecer el precio predeterminado o ajustarlo según sea necesario
+                product.setPrice(BigDecimal.valueOf(0.0));
             }
 
-            // Crea un nuevo PurchaseItem
             PurchaseItem purchaseItem = new PurchaseItem();
             purchaseItem.setProduct(product);
             purchaseItem.setQuantity(productDTO.getQuantity());
             purchaseItem.setPurchase(purchase);
 
-            // Agrega el PurchaseItem a la compra
             purchase.getPurchaseItems().add(purchaseItem);
 
-            // Actualiza el monto total de la compra
             updatePurchaseTotalAmount(purchase);
 
-            // Guarda la compra actualizada
             Purchase savedPurchase = purchaseRepository.save(purchase);
 
             return mapToDetailedPurchaseDTO(savedPurchase);
         } catch (EntityNotFoundException e) {
             log.error("Error adding product: {}", e.getMessage());
-            throw e;  // Re-lanzar la excepción para que se maneje en el controlador
+            throw e;
         } catch (Exception e) {
             log.error("Error adding product: {}", e.getMessage());
             throw new RuntimeException("Error adding product", e);
@@ -215,7 +204,7 @@ public class PurchaseServiceImpl {
                 .productId(product.getId())
                 .productName(product.getName())
                 .productPrice(product.getPrice())
-                .quantity(product.getQuantity())  // Agrega la cantidad
+                .quantity(product.getQuantity())
                 .build();
     }
 
@@ -230,7 +219,6 @@ public class PurchaseServiceImpl {
     private void updatePurchaseTotalAmount(Purchase purchase) {
         List<PurchaseItem> purchaseItems = purchase.getPurchaseItems();
 
-        // Utiliza Java Streams y reducción para calcular el totalAmount
         BigDecimal totalAmount = purchaseItems.stream()
                 .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -244,16 +232,13 @@ public class PurchaseServiceImpl {
             Purchase purchase = getPurchaseById(idPurchase);
             Product product = getProductById(productDTO.getProductId());
 
-            // Encuentra el PurchaseItem correspondiente al producto
             PurchaseItem purchaseItem = purchase.getPurchaseItems().stream()
                     .filter(item -> item.getProduct().equals(product))
                     .findFirst()
                     .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado en la compra"));
 
-            // Modifica la cantidad del producto en el PurchaseItem
             purchaseItem.setQuantity(productDTO.getQuantity());
 
-            // Utiliza la lógica del método addProduct para actualizar el producto
             return addProductLogic(purchase, productDTO);
         } catch (EntityNotFoundException e) {
             log.error("Error while modifying product: {}", e.getMessage());
@@ -265,16 +250,14 @@ public class PurchaseServiceImpl {
     }
 
     private DetailedPurchaseDTO addProductLogic(Purchase purchase, ProductDTO productDTO) {
-        // Intenta obtener el producto por ID
+
         Product product = getProductById(productDTO.getProductId());
 
         if (product == null) {
-            // Si el producto no existe, crea uno nuevo
             product = new Product();
-            // Configura los detalles del nuevo producto (puedes ajustar según tus necesidades)
             product.setId(productDTO.getProductId());
             product.setName("Nuevo Producto");
-            product.setPrice(BigDecimal.valueOf(0.0)); // Puedes establecer el precio predeterminado o ajustarlo según sea necesario
+            product.setPrice(BigDecimal.valueOf(0.0));
         }
 
         PurchaseItem purchaseItem = new PurchaseItem();
@@ -326,7 +309,6 @@ public class PurchaseServiceImpl {
         try {
             Purchase purchase = getPurchaseById(idPurchase);
 
-            // Verificar que la compra esté en un estado adecuado para cambiar el método de pago (por ejemplo, "En Progreso")
             if (purchase.getStatus() != OrderStatus.IN_PROGRESS) {
                 throw new IllegalStateException("No se puede cambiar el método de pago de una compra que no está en progreso.");
             }
@@ -361,7 +343,6 @@ public class PurchaseServiceImpl {
 
             purchase.setStatus(OrderStatus.COMPLETED);
 
-
             Purchase savedPurchase = purchaseRepository.save(purchase);
 
             return mapToDetailedPurchaseDTO(savedPurchase);
@@ -378,7 +359,6 @@ public class PurchaseServiceImpl {
         try {
             Purchase purchase = getPurchaseById(idPurchase);
 
-            // Verificar que la compra esté en un estado adecuado para cambiar la dirección (por ejemplo, "En Progreso")
             if (purchase.getStatus() != OrderStatus.IN_PROGRESS) {
                 throw new IllegalStateException("No se puede cambiar la dirección de una compra que no está en progreso.");
             }
@@ -418,14 +398,12 @@ public class PurchaseServiceImpl {
         try {
             Purchase purchase = getPurchaseById(idPurchase);
 
-            // Verificar que la compra esté en un estado adecuado para cambiar la dirección (por ejemplo, "En Progreso")
             if (purchase.getStatus() != OrderStatus.IN_PROGRESS) {
                 throw new IllegalStateException("No se puede cambiar la dirección de una compra que no está en progreso.");
             }
 
             Address newAddress = mapToAddress(newAddressDTO);
 
-            // Guardar explícitamente la dirección antes de asignarla a la compra
             Address savedAddress = addressRepository.save(newAddress);
 
             purchase.setDeliveryAddress(savedAddress);
@@ -447,11 +425,9 @@ public class PurchaseServiceImpl {
 
     public void printSavedAddress(Long addressId) {
         try {
-            // Obtén la dirección por ID
             Address savedAddress = addressRepository.findById(addressId)
                     .orElseThrow(() -> new EntityNotFoundException("Dirección no encontrada"));
 
-            // Imprime la dirección
             log.info("Dirección guardada: {}", savedAddress);
         } catch (EntityNotFoundException e) {
             log.error("Error al imprimir la dirección guardada: {}", e.getMessage());
@@ -467,7 +443,6 @@ public class PurchaseServiceImpl {
             Client client = getClientById(purchaseDTO.getClientId());
             Address existingAddress = getAddressById(purchaseDTO.getAddressId());
 
-            // Imprime la dirección antes de guardarla
             log.debug("Address before saving: {}", existingAddress);
 
             PaymentMethod paymentMethod = getPaymentMethodById(purchaseDTO.getPaymentMethodId());
@@ -478,7 +453,6 @@ public class PurchaseServiceImpl {
             newPurchase.setDeliveryAddress(existingAddress);
             newPurchase.setPaymentMethod(paymentMethod);
 
-            // Mapeo de ProductDTO a PurchaseItem
             List<PurchaseItem> purchaseItems = purchaseDTO.getProducts().stream()
                     .map(productDTO -> {
                         Product product = getProductById(productDTO.getProductId());
@@ -491,21 +465,18 @@ public class PurchaseServiceImpl {
                     .collect(Collectors.toList());
 
             newPurchase.setPurchaseItems(purchaseItems);
-            newPurchase.setStatus(OrderStatus.IN_PROGRESS); // Asegúrate de establecer el estado
+            newPurchase.setStatus(OrderStatus.IN_PROGRESS);
 
             Purchase savedPurchase = purchaseRepository.save(newPurchase);
 
-            // Imprime la dirección después de guardarla
             log.debug("Address after saving: {}", savedPurchase.getDeliveryAddress());
 
-            // Calcula el total amount después de guardar la compra
             updatePurchaseTotalAmount(savedPurchase);
 
-            // Retorna el DTO con la información necesaria sin el total amount
             return mapToDetailedPurchaseDTO(savedPurchase);
         } catch (EntityNotFoundException e) {
             log.error("Error while starting purchase: {}", e.getMessage());
-            throw e;  // Re-lanzar la excepción para que se maneje en el controlador
+            throw e;
         } catch (Exception e) {
             log.error("Error while starting purchase: {}", e.getMessage());
             throw new RuntimeException("Error starting purchase", e);
@@ -520,44 +491,4 @@ public class PurchaseServiceImpl {
                 .zipCode(address.getZipCode())
                 .build();
     }
-
-/*    public FullOrderDTO mapToFullOrderDTO(Purchase purchase) {
-        // Mapea los productos
-        List<ProductDTO> productDTOs = purchase.getPurchaseItems().stream()
-                .map(item -> purchaseService.mapToProductDTO(item, purchase.getTotalAmount()))
-                .collect(Collectors.toList());
-
-        // Mapea la dirección de entrega
-        AddressDTO addressDTO = mapToAddressDTO(purchase.getDeliveryAddress());
-
-        // Mapea el método de pago (Enum)
-        PaymentMethodType paymentMethodType = purchase.getPaymentMethod().getType();
-
-        // Construye el DTO completo
-        return FullOrderDTO.builder()
-                .purchaseId(purchase.getId())
-                .clientId(purchase.getClient().getId())
-                .products(productDTOs)
-                .deliveryAddress(addressDTO)
-                .totalAmount(purchase.getTotalAmount().doubleValue())
-                .orderStatus(purchase.getStatus())
-                .paymentMethodType(paymentMethodType)  // Utiliza el enum directamente
-                .build();
-    }*/
-
-/*    public DetailedPurchaseDTO startPurchase(PurchaseDTO purchaseDTO) {
-        try {
-            Client client = getClientById(purchaseDTO.getClientId());
-            Address existingAddress = addressService.mapToAddress(purchaseDTO.getAddressDTO()); // Utiliza el nuevo método
-
-            // ... (resto del código)
-        } catch (EntityNotFoundException e) {
-            log.error("Error while starting purchase: {}", e.getMessage());
-            throw e;
-        } catch (Exception e) {
-            log.error("Error while starting purchase: {}", e.getMessage());
-            throw new RuntimeException("Error starting purchase", e);
-        }
-    }*/
-
 }

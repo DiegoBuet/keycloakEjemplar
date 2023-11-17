@@ -20,12 +20,12 @@ public class PaymentMethod {
     @Column(name = "payment_method_type")
     private PaymentMethodType paymentMethodType;;
 
-    // Agrega el getter para 'id'
+
     public Long getId() {
         return id;
     }
 
-    // Agrega el setter para 'id'
+
     public void setId(Long id) {
         this.id = id;
     }

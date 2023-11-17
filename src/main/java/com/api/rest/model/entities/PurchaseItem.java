@@ -25,5 +25,5 @@ public class PurchaseItem {
     private Product product;
 
     @Column(name = "quantity", nullable = false)
-    private int quantity;  // Nueva propiedad para la cantidad
+    private int quantity;
 }

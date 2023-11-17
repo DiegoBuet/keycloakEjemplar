@@ -6,5 +6,6 @@ import jakarta.persistence.EntityNotFoundException;
 public interface PaymentMethodService {
     PaymentMethod getPaymentMethodById(Long id);
     PaymentMethod updatePaymentMethod(PaymentMethod paymentMethod);
+
 }
 

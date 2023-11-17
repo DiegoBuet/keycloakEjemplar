@@ -29,34 +29,6 @@ public class PaymentMethodController {
         this.paymentMethodService = paymentMethodService;
     }
 
-/*    @GetMapping("/{id}")
-    public ResponseEntity<PaymentMethod> getPaymentMethod(@PathVariable Long id) {
-        try {
-            PaymentMethod paymentMethod = paymentMethodService.getPaymentMethodById(id);
-            return ResponseEnatity.ok(paymentMethod);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }*/
-/*
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> updatePaymentMethod(@PathVariable Long id, @RequestBody PaymentDTO paymentDTO) {
-        try {
-            PaymentMethod paymentMethod = paymentMethodService.getPaymentMethodById(id);
-            paymentMethod.setPaymentMethodType(paymentDTO.getPaymentMethodType());  // Asigna directamente el valor del enum
-            PaymentMethod updatedPaymentMethod = paymentMethodService.updatePaymentMethod(paymentMethod);
-            return ResponseEntity.ok(updatedPaymentMethod);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            // Manejar el caso en que el valor del enum no sea válido
-            return ResponseUtil.buildErrorResponse(HttpStatus.BAD_REQUEST, "Tipo de método de pago no válido");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }*/
     @GetMapping("/types")
     public ResponseEntity<List<String>> getPaymentMethodTypes() {
         List<String> paymentMethodTypes = Arrays.stream(PaymentMethodType.values())
@@ -76,7 +48,6 @@ public class PaymentMethodController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-/*
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updatePaymentMethod(@PathVariable Long id, @RequestBody PaymentDTO paymentDTO) {
@@ -93,26 +64,5 @@ public class PaymentMethodController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-*/
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> updatePaymentMethod(@PathVariable Long id, @RequestBody PaymentDTO paymentDTO) {
-        try {
-            PaymentMethod paymentMethod = paymentMethodService.getPaymentMethodById(id);
-            paymentMethod.setPaymentMethodType(paymentDTO.getPaymentMethodType());
-            PaymentMethod updatedPaymentMethod = paymentMethodService.updatePaymentMethod(paymentMethod);
-            return ResponseEntity.ok(updatedPaymentMethod);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseUtil.buildErrorResponse(HttpStatus.BAD_REQUEST, "Tipo de método de pago no válido");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-
 
 }
-
-

@@ -6,9 +6,9 @@ public enum OrderStatus {
     CANCELLED,
     APPROVED,
     COMPLETED,
-    PENDING_PAYMENT,  // Nuevo estado para la espera de pago
-    PAID,             // Nuevo estado para el pago completado
-    IN_TRANSIT,       // Nuevo estado para el envío en tránsito
-    DELIVERED,        // Nuevo estado para la entrega completada
+    PENDING_PAYMENT,
+    PAID,
+    IN_TRANSIT,
+    DELIVERED,
     FAILED
 }

@@ -27,23 +27,5 @@ public class DeliveryController {
         this.orderService = orderService;
     }
 
-/*    @PostMapping("/create")
-    public ResponseEntity<Delivery> createDelivery(@RequestParam Long orderId, @RequestParam Long deliveryAddressId) {
-        try {
-            Order order = orderService.getOrderById(orderId);
-            Address deliveryAddress = orderService.getAddressById(deliveryAddressId);
 
-            Delivery createdDelivery = deliveryService.createDelivery(order, deliveryAddress);
-
-            return new ResponseEntity<>(createdDelivery, HttpStatus.CREATED);
-        } catch (EntityNotFoundException e) {
-            log.error("Error creating delivery: {}", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            log.error("Error creating delivery: {}", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }*/
-
-    // Otros endpoints relacionados con las entregas (actualización de estado, obtener detalles, etc.)
 }

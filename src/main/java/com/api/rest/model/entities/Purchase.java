@@ -22,7 +22,7 @@
         private Long id;
 
         @Getter
-        @ManyToOne(fetch = FetchType.EAGER)  // Asegúrate de que FetchType sea EAGER
+        @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "client_id", nullable = false)
         private Client client;
 
@@ -47,7 +47,7 @@
         @Enumerated(EnumType.STRING)
         private OrderStatus status;
 
-        @Column(name = "payment_amount") // Cambié el nombre aquí para evitar la colisión
+        @Column(name = "payment_amount")
         private BigDecimal paymentAmount;
 
         @Column(name = "payment_status")

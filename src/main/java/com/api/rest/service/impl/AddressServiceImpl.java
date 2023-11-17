@@ -29,19 +29,9 @@ public class AddressServiceImpl implements AddressService {
         return addressRepository.save(address);
     }
 
-/*    @Override
-    public Address mapToAddress(AddressDTO addressDTO) {
-        Address address = new Address();
-        address.setStreet(addressDTO.getStreet());
-        address.setCity(addressDTO.getCity());
-        address.setState(addressDTO.getState());
-        address.setZipCode(addressDTO.getZipCode());
-        return address;
-    }*/
-
     @Override
     public Address createAddress(AddressDTO addressDTO) {
-        // Implementa la lógica para crear una nueva dirección aquí
+
         Address newAddress = mapToAddress(addressDTO);
         return addressRepository.save(newAddress);
     }

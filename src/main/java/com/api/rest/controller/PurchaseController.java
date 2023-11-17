@@ -2,7 +2,6 @@ package com.api.rest.controller;
 
 import com.api.rest.model.dto.*;
 import com.api.rest.model.entities.Address;
-import com.api.rest.model.entities.PaymentMethodType;
 import com.api.rest.service.impl.PurchaseServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
+
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -38,10 +37,10 @@ public class PurchaseController {
                 DetailedPurchaseDTO createdPurchase = purchaseService.startPurchase(purchaseDTO);
                 return new ResponseEntity<>(createdPurchase, HttpStatus.CREATED);
             } catch (EntityNotFoundException e) {
-                // Manejar la excepción EntityNotFoundException aquí si es necesario
+
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } catch (Exception e) {
-                // Manejar otras excepciones aquí si es necesario
+
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -127,7 +126,7 @@ public class PurchaseController {
     @PutMapping("/{id}/change-address")
     public ResponseEntity<Address> changeAddress(@PathVariable Long id, @RequestBody AddressDTO newAddressDTO) {
         try {
-            // Reutilizar la lógica de AddressController
+
             return addressController.updateAddress(id, newAddressDTO);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

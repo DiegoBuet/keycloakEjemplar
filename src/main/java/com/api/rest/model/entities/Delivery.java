@@ -35,5 +35,5 @@ public class Delivery {
     @Column(name = "status")
     private OrderStatus status;
 
-    // Puedes agregar más propiedades según sea necesario
+
 }

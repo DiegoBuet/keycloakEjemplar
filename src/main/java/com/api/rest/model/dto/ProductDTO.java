@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 public class ProductDTO {
     @NotNull(message = "productId is required")
     private Long productId;
-    private int quantity;  // Nueva propiedad para la cantidad
-    private String productName;  // Agregado para el nombre del producto
-    private BigDecimal productPrice;  // Agregado para el precio del producto
+    private int quantity;
+    private String productName;
+    private BigDecimal productPrice;
     private Double totalAmount;
 }
 

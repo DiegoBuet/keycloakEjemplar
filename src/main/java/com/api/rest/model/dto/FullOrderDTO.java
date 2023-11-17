@@ -21,8 +21,6 @@ public class FullOrderDTO {
 
     private PaymentMethodType type;
 
-    // ... Otros getters y setters
-
     public PaymentMethodType getType() {
         return type;
     }
@@ -38,7 +36,5 @@ public class FullOrderDTO {
     public void setPaymentMethodType(PaymentMethodType paymentMethodType) {
         this.paymentMethodType = paymentMethodType;
     }
-    // Otros campos necesarios
 
-    // Agrega constructores, getters y setters según sea necesario
 }

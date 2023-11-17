@@ -36,13 +36,11 @@ public class AddressController {
             Address existingAddress = addressService.getAddressById(addressId);
             Address updatedAddress = addressService.mapToAddress(updatedAddressDTO);
 
-            // Actualiza las propiedades de la dirección existente con los datos actualizados
             existingAddress.setStreet(updatedAddress.getStreet());
             existingAddress.setCity(updatedAddress.getCity());
             existingAddress.setState(updatedAddress.getState());
             existingAddress.setZipCode(updatedAddress.getZipCode());
 
-            // Guarda la dirección actualizada en la base de datos
             Address savedAddress = addressService.updateAddress(existingAddress);
 
             return new ResponseEntity<>(savedAddress, HttpStatus.OK);
